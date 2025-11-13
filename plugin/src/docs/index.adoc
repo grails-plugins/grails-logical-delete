@@ -1,0 +1,161 @@
+:examples: ../../../examples
+
+= Grails Logical Delete
+
+== Introduction
+
+The **Logical Delete plugin** provides support for __soft__ deleting records.
+
+A __logical__ or __soft__ deletion, is one that doesn't actually delete the record from persistent
+storage, but instead marks the record as deleted.
+
+Marking the record as deleted has the benefit of maintaining the ability to retrieve the record if necessary.
+
+Essentially, the plugin offers a mechanism to __hide__ records from retrieval.
+This is useful for retaining records without having it clutter the current set of active data.
+
+== Installation
+
+=== Adding the Plugin to Your Grails Application
+
+To add this plugin to your Grails application, include the following dependency in the `dependencies` block of
+the `build.gradle` file:
+
+[source,groovy,subs="attributes"]
+implementation 'org.grails.plugins:grails-logical-delete:{version}'
+
+=== Snapshot Builds
+
+You can also use snapshot builds, as they are published to the
+https://repo.grails.org[Grails Artifactory Repository].
+
+== Usage
+
+=== The LogicalDelete Trait
+
+This plugin provides the link:../api/grails/logical/delete/LogicalDelete.html[LogicalDelete] trait,
+which any **Grails domain class** can implement to enable __soft deletes__.
+
+The trait adds a persistent boolean property named `deleted` to the domain class.
+
+When `deleted` is set to `true`, the entity is considered __logically deleted__ and will be
+**excluded from query results by default**.
+
+[source,groovy]
+----
+include::{examples}/app1/grails-app/domain/app/Person.groovy[tags=person_class,indent=0]
+----
+
+=== Soft Deleting Entities
+
+Deleting an entity that implements the link:../api/grails/logical/delete/LogicalDelete.html[LogicalDelete] trait
+is as simple as calling the `delete()` method. This sets the `deleted` property to `true`, causing the record
+to be __logically deleted__ — meaning it will be **excluded from query results by default**.
+
+[source,groovy]
+----
+Person p = new Person(userName: 'Nirav').save()
+p.delete()
+----
+
+To restore (or undelete) the object, call the `undelete()` method:
+
+[source,groovy]
+----
+p.undelete()
+----
+
+If you want to **physically delete** the record from persistent storage, pass the `hard: true` argument to the `delete()` method:
+
+[source,groovy]
+----
+p.delete(hard: true)
+----
+
+=== Queries
+
+Most queries **automatically exclude logically deleted records** from their results by default.
+
+WARNING: Hibernate Criteria and HQL queries are NOT supported by this plugin.
+
+For example, a dynamic finder query written as:
+
+[source,groovy]
+----
+results = Person.findAll {
+    userName == 'Robert'
+}
+----
+
+is executed as if it had been written like this:
+
+[source,groovy]
+----
+results = Person.findAll {
+    userName == 'Robert'
+    deleted == false
+}
+----
+
+If you need to **include** logically deleted records in query results, wrap your query in a call to `withDeleted`,
+as shown below. Any query can be wrapped with the `withDeleted` closure.
+
+[source,groovy]
+----
+include::{examples}/app1/src/integration-test/groovy/grails/logical/delete/WithDeletedSpec.groovy[tags=find_all_with_deleted,indent=0]
+----
+
+The plugin supports a variety of query types in addition to dynamic finders. +
+Examples are shown below:
+
+==== Criteria Query
+
+[source,groovy]
+----
+include::{examples}/app1/src/integration-test/groovy/grails/logical/delete/CriteriaSpec.groovy[tags=criteria_query,indent=0]
+----
+
+==== Detached Criteria Query
+
+[source,groovy]
+----
+include::{examples}/app1/src/integration-test/groovy/grails/logical/delete/DetachedCriteriaSpec.groovy[tags=detachedCriteria_query,indent=0]
+----
+
+==== GORM methods
+
+The standard `GormEntity<D>` methods — such as `get`, `load`, `proxy`, and `read` — are also supported.
+
+==== GORM Data Services
+
+GORM Data Services are supported.
+See <<peopleDataService,the example below>> for an example.
+
+=== WithDeleted Annotation
+
+The `@WithDeleted` annotation allows you to **mark a method** so that queries executed within it
+**include logically deleted records**. It serves as an alternative to using the `withDeleted` closure.
+
+This is particularly useful when working with GORM Data Services or other classes that function as
+**Data Access Objects (DAOs)**.
+
+[source,groovy,id=peopleDataService]
+----
+include::{examples}/app1/grails-app/services/app/PeopleDataService.groovy[tags=peopleDataService,indent=0]
+----
+
+== Implementation Details
+
+This section provides a brief overview of the internal implementation of the **Grails Logical Delete** plugin.
+
+The link:../api/grails/logical/delete/LogicalDelete.html[LogicalDelete] trait defines the `deleted` property
+and overrides core persistence methods to implement **soft deletion** and **query filtering** behavior.
+
+The link:../api/grails/logical/delete/PreQueryListener.html[PreQueryListener] listens for query events and
+modifies the query to automatically **exclude logically deleted records**.
+
+The project's **Spock tests** serve as a useful reference for examples and usage patterns of the plugin's API.
+
+== API Documentation
+
+API documentation may be found link:../api/index.html[here].

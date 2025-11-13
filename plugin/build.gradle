@@ -1,0 +1,45 @@
+plugins {
+    id 'build.config.codenarc'
+    id 'build.config.docs'
+    id 'build.config.grails'
+    id 'build.config.java'
+    id 'build.config.publish'
+    id 'build.config.reproducible'
+}
+
+version = projectVersion
+group = 'org.grails.plugins'
+
+ext.set('pomDevelopers', [
+    jeffscottbrown: 'Jeff Scott Brown',
+    niravassar: 'Nirav Assar',
+    benrhine: 'Ben Rhine',
+    matrei: 'Mattias Reichel',
+])
+
+dependencies {
+
+    implementation platform("org.apache.grails:grails-bom:$grailsVersion")
+
+    compileOnly 'org.apache.grails:grails-core', { // Provided
+        // impl: Plugin
+    }
+    compileOnly 'org.apache.grails.common:grails-common', { // Provided
+        // comp: GroovyTransformOrder
+    }
+    compileOnly 'org.apache.grails.data:grails-datamapping-core', { // Provided
+        // api: DetachedCriteria, GormEntity
+        // impl: GormEnhancer, GormStaticApi
+        // comp: AbstractGormASTTransformation
+    }
+    compileOnly 'org.apache.grails.data:grails-datastore-core', { // Provided
+        // impl: PreQueryEvent, Query
+    }
+    compileOnly 'org.apache.groovy:groovy' // Provided
+    compileOnly 'org.springframework:spring-context', { // Provided
+        // impl: ApplicationListener
+    }
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure', { // Provided
+        // runtime: @AutoConfiguration(runtime), @Bean(runtime)
+    }
+}

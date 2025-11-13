@@ -1,0 +1,77 @@
+version = projectVersion
+group = 'test'
+
+apply plugin: 'org.apache.grails.gradle.grails-web'
+apply plugin: 'org.apache.grails.gradle.grails-gsp'
+apply plugin: 'cloud.wondrify.asset-pipeline'
+
+dependencies {
+
+    dependencies {
+
+        implementation platform("org.apache.grails:grails-bom:$grailsVersion")
+
+        implementation project(':grails-logical-delete')
+
+        implementation 'org.apache.grails:grails-core'
+        implementation 'org.apache.grails:grails-logging'
+        implementation 'org.apache.grails:grails-databinding'
+        implementation 'org.apache.grails:grails-interceptors'
+        implementation 'org.apache.grails:grails-rest-transforms'
+        implementation 'org.apache.grails:grails-services'
+        implementation 'org.apache.grails:grails-url-mappings'
+        implementation 'org.apache.grails:grails-web-boot'
+        implementation 'org.apache.grails:grails-gsp'
+        implementation 'org.apache.grails:grails-layout'
+        implementation 'org.apache.grails:grails-data-hibernate5'
+        implementation 'org.apache.grails:grails-scaffolding'
+        implementation 'org.springframework.boot:spring-boot-autoconfigure'
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-logging'
+        implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        testAndDevelopmentOnly platform("org.apache.grails:grails-bom:$grailsVersion")
+        testAndDevelopmentOnly 'org.webjars.npm:bootstrap'
+        testAndDevelopmentOnly 'org.webjars.npm:jquery'
+
+        runtimeOnly 'cloud.wondrify:asset-pipeline-grails'
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'org.apache.tomcat:tomcat-jdbc'
+        runtimeOnly 'org.fusesource.jansi:jansi'
+
+        testImplementation 'org.apache.grails:grails-testing-support-datamapping'
+        testImplementation 'org.apache.grails:grails-testing-support-web'
+        testImplementation 'org.spockframework:spock-core'
+
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+}
+
+compileJava.options.release = javaVersion.toInteger()
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+        events('passed', 'skipped', 'failed', 'standardOut', 'standardError')
+    }
+    // For debugging
+    //jvmArgs += ['-Xmx2g', '-Xdebug', '-Xnoagent', '-Djava.compiler=NONE', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
+}
+
+assets {
+    excludes = [
+            'webjars/jquery/**',
+            'webjars/bootstrap/**',
+            'webjars/bootstrap-icons/**',
+    ]
+    includes = [
+            'webjars/jquery/*/dist/jquery.js',
+            'webjars/bootstrap/*/dist/js/bootstrap.bundle.js',
+            'webjars/bootstrap/*/dist/css/bootstrap.css',
+            'webjars/bootstrap-icons/*/font/bootstrap-icons.css',
+            'webjars/bootstrap-icons/*/font/fonts/*',
+    ]
+}

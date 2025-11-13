@@ -1,0 +1,60 @@
+name: "Java CI"
+on:
+  push:
+    branches:
+      - '[0-9]+.[0-9]+.x'
+  pull_request:
+    branches:
+      - '[0-9]+.[0-9]+.x'
+  workflow_dispatch:
+env:
+  GRAILS_PUBLISH_RELEASE: 'false'
+  JAVA_DISTRIBUTION: liberica
+  JAVA_VERSION: 17.0.17
+jobs:
+  test_project:
+    name: "Test Project"
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v5
+      - name: "☕️ Setup JDK"
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+      - name: "🐘 Setup Gradle"
+        uses: gradle/actions/setup-gradle@v5
+      - name: "🏃‍♂️ Run Tests"
+        run: ./gradlew check --continue
+  publish_snapshot:
+    name: "Build Project and Publish Snapshot"
+    runs-on: ubuntu-24.04
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.repository_owner == 'grails-plugins'
+    permissions:
+      contents: write
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v5
+      - name: "☕️ Setup JDK"
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+      - name: "🐘 Setup Gradle"
+        uses: gradle/actions/setup-gradle@v5
+      - name: "📤 Publish Snapshot artifacts"
+        env:
+          MAVEN_PUBLISH_USERNAME: ${{ secrets.MAVEN_PUBLISH_USERNAME }}
+          MAVEN_PUBLISH_PASSWORD: ${{ secrets.MAVEN_PUBLISH_PASSWORD }}
+          MAVEN_PUBLISH_URL: 'https://repo.grails.org/artifactory/plugins3-snapshots-local'
+        run: ./gradlew publish
+      - name: "🔨 Generate Snapshot Documentation"
+        run: ./gradlew docs
+      - name: "🚀 Publish to Github Pages"
+        uses: apache/grails-github-actions/deploy-github-pages@asf
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GRADLE_PUBLISH_RELEASE: 'false'
+          SOURCE_FOLDER: plugin/build/docs

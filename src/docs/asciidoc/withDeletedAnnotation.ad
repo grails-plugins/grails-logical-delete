@@ -1,8 +1,0 @@
-The `@WithDeleted` annotation allows you to mark a method on a class so that queries within the method will retrieve logically
-deleted entities. This is an alternate solution to using the `withDeleted` closure. Ths is useful in conjuction for Gorm Data Services, or
-any classes that act as DAOs.
-
-[source,groovy]
-----
-include::{projectdir}/src/test/groovy/gorm/logical/delete/annotations/GormDataServiceWithDeletedTransformationSpec.groovy[tags=personService,indent=0]
-----

@@ -1,0 +1,69 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+def versions = new Properties()
+file('../gradle.properties').withInputStream {
+    versions.load(it)
+}
+
+repositories {
+    maven { url = 'https://repo.grails.org/grails/restricted' }
+    maven {
+        url = 'https://repository.apache.org/content/groups/snapshots'
+        content {
+            includeGroupAndSubgroups('org.apache.grails')
+            includeGroupAndSubgroups('org.apache.groovy')
+        }
+        mavenContent { snapshotsOnly() }
+    }
+}
+
+dependencies {
+    implementation platform("org.apache.grails:grails-bom:${versions['grailsVersion']}")
+    implementation 'cloud.wondrify:asset-pipeline-gradle'
+    implementation 'org.asciidoctor:asciidoctor-gradle-jvm'
+    implementation 'org.apache.grails:grails-gradle-plugins'
+    implementation "org.apache.grails.gradle:grails-publish:${versions['grailsGradlePublishVersion']}"
+}
+
+gradlePlugin {
+    plugins {
+        register('codenarc') {
+            id = 'build.config.codenarc'
+            implementationClass = 'build.config.CodeNarc'
+            displayName = 'CodeNarc Configuration'
+            description = 'Configures CodeNarc for Groovy static code analysis'
+        }
+        register('docs') {
+            id = 'build.config.docs'
+            implementationClass = 'build.config.Docs'
+            displayName = 'Documentation Configuration'
+            description = 'Configures Groovydoc, Asciidoctor, and a docs aggregator task'
+        }
+        register('grails') {
+            id = 'build.config.grails'
+            implementationClass = 'build.config.Grails'
+            displayName = 'Grails Build Configuration'
+            description = 'Configures Grails for the build'
+        }
+        register('java') {
+            id = 'build.config.java'
+            implementationClass = 'build.config.Java'
+            displayName = 'Java Build Configuration'
+            description = 'Configures Java for the build'
+        }
+        register('publish') {
+            id = 'build.config.publish'
+            implementationClass = 'build.config.Publish'
+            displayName = 'Publish Configuration'
+            description = 'Configures publishing'
+        }
+        register('reproducible') {
+            id = 'build.config.reproducible'
+            implementationClass = 'build.config.Reproducible'
+            displayName = 'Reproducible Build Configuration'
+            description = 'Configures the build for reproducible outputs'
+        }
+    }
+}

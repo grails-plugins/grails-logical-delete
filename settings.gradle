@@ -1,0 +1,7 @@
+rootProject.name = 'grails-logical-delete.ROOT'
+
+include('plugin')
+findProject(':plugin').name = 'grails-logical-delete'
+
+include('app1')
+project(':app1').projectDir = new File(settingsDir, 'examples/app1')

@@ -1,21 +1,21 @@
 package grails.logical.delete
 
 import app.Person
+import spock.lang.Narrative
 import spock.lang.Specification
+import spock.lang.Title
 
 import grails.gorm.transactions.Rollback
 import grails.logical.delete.test.PersonTestData
 import grails.testing.mixin.integration.Integration
 
-/**
- * This test suite focuses on the behavior of dynamic finders
- * in collaboration with the {@code PreQueryListener}.
- */
 @Integration
+@Title('Using Dynamic Finders')
+@Narrative('This specification focuses on the behavior of dynamic finders in collaboration with the PreQueryListener.')
 class DynamicFindersSpec extends Specification implements PersonTestData {
 
     @Rollback
-    void 'test dynamic findAll hide logical deleted items'() {
+    void 'findAll hide logical deleted items'() {
         // findAll() Call
         given:
             assert Person.count() == 3
@@ -39,7 +39,7 @@ class DynamicFindersSpec extends Specification implements PersonTestData {
     }
 
     @Rollback
-    void 'test dynamic findByUserName hide logical deleted items'() {
+    void 'findByUserName hide logical deleted items'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)
@@ -55,8 +55,7 @@ class DynamicFindersSpec extends Specification implements PersonTestData {
     }
 
     @Rollback
-    void 'test dynamic findByDeleted hide logical deleted items'() {
-        // findByDeleted() Call
+    void 'findByDeleted hide logical deleted items'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)
@@ -78,7 +77,7 @@ class DynamicFindersSpec extends Specification implements PersonTestData {
     }
 
     @Rollback
-    void 'test dynamic get() finds logical deleted items'() {
+    void 'get() hides logical deleted items'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)

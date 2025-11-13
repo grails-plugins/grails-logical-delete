@@ -1,27 +1,21 @@
 package grails.logical.delete
 
 import app.Person
-import spock.lang.PendingFeature
+import spock.lang.Narrative
 import spock.lang.Specification
+import spock.lang.Title
 
 import grails.gorm.transactions.Rollback
 import grails.logical.delete.test.PersonTestData
 import grails.testing.mixin.integration.Integration
 
-/**
- * This test suite focuses on the behavior of criteria API
- * in collaboration with the {@code PreQueryListener}.
- */
 @Integration
+@Title('Using Criteria Queries')
+@Narrative('This specification focuses on the behavior of the Criteria API in collaboration with the PreQueryListener.')
 class CriteriaSpec extends Specification implements PersonTestData {
 
     @Rollback
-/*
-    @PendingFeature(
-        reason = 'Currently PreQueryListener does not work with criteria queries'
-    )
-*/
-    void 'test criteria - logical deleted items'() {
+    void 'logically deleted items are excluded from query results'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)
@@ -53,7 +47,7 @@ class CriteriaSpec extends Specification implements PersonTestData {
     }
 
     @Rollback
-    void 'test criteria with projection - logical deleted items'() {
+    void 'projection results exclude logically deleted items'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)

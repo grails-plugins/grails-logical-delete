@@ -3,6 +3,9 @@ package grails.logical.delete
 import groovy.transform.CompileStatic
 
 import app.Person
+import spock.lang.Narrative
+import spock.lang.Title
+
 import grails.logical.delete.annotations.WithDeleted
 import spock.lang.Specification
 
@@ -11,9 +14,11 @@ import grails.logical.delete.test.PersonTestData
 import grails.testing.mixin.integration.Integration
 
 @Integration
+@Title('Using @WithDeleted')
+@Narrative('This specification focuses on the behavior of the @WithDeleted annotation.')
 class WithDeletedTransformationSpec extends Specification implements PersonTestData {
 
-    void 'test method marked with @WithDeleted includes logically deleted results'() {
+    void 'method annotated with @WithDeleted include logically deleted results'() {
         setup:
             def helper = new PersonHelper()
 

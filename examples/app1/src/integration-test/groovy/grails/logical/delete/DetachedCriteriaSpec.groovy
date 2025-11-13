@@ -2,6 +2,7 @@ package grails.logical.delete
 
 import app.Person
 import spock.lang.Specification
+import spock.lang.Title
 
 import grails.gorm.transactions.Rollback
 import grails.logical.delete.test.PersonTestData
@@ -12,10 +13,11 @@ import grails.testing.mixin.integration.Integration
  * in collaboration with the {@code PreQueryListener}.
  */
 @Integration
+@Title('Using Detached Criteria Queries')
 class DetachedCriteriaSpec extends Specification implements PersonTestData {
 
     @Rollback
-    void 'test detached criteria where'() {
+    void 'where query results exclude logically deleted items'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)
@@ -42,7 +44,7 @@ class DetachedCriteriaSpec extends Specification implements PersonTestData {
     }
 
     @Rollback
-    void 'test detached criteria findAll'() {
+    void 'findAll query results exclude logically deleted items'() {
         given:
             assert Person.count() == 3
             Person.findByUserName('Ben').delete(flush: true)

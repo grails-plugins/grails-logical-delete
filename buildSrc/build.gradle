@@ -24,7 +24,7 @@ dependencies {
     implementation 'cloud.wondrify:asset-pipeline-gradle'
     implementation 'org.asciidoctor:asciidoctor-gradle-jvm'
     implementation 'org.apache.grails:grails-gradle-plugins'
-    implementation "org.apache.grails.gradle:grails-publish:${versions['grailsGradlePublishVersion']}"
+    implementation 'org.apache.grails.gradle:grails-publish'
 }
 
 gradlePlugin {

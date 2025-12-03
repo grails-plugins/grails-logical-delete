@@ -13,7 +13,6 @@ class Publish implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.pluginManager.apply('org.apache.grails.gradle.grails-publish')
         project.extensions.configure(GrailsPublishExtension) {
             it.organization.name.set('Grails Plugins')
             it.organization.url.set('https://github.com/grails-plugins')

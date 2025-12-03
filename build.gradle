@@ -17,7 +17,7 @@ subprojects {
 // version and group must be specified in the root project
 // https://github.com/gradle-nexus/publish-plugin/issues/310
 version = projectVersion
-group = 'this.will.be.overridden'
+group = 'org.grails.plugins'
 subprojects {
     if (name == 'grails-logical-delete') {
         apply plugin: 'org.apache.grails.gradle.grails-publish'

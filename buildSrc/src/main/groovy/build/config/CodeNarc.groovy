@@ -5,6 +5,7 @@ import groovy.transform.CompileStatic
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.quality.CodeNarcExtension
 import org.gradle.api.plugins.quality.CodeNarcReports
 import org.gradle.api.tasks.GroovySourceDirectorySet
 import org.gradle.api.tasks.SourceSetContainer
@@ -18,6 +19,10 @@ class CodeNarc implements Plugin<Project>  {
         project.pluginManager.withPlugin('java') {
 
             project.pluginManager.apply('codenarc')
+
+            project.extensions.configure(CodeNarcExtension) {
+                it.toolVersion = project.findProperty('codenarcVersion')
+            }
 
             def codenarcAnalysisTarget = project.configurations.maybeCreate('codenarcAnalysisTarget').tap {
                 description = 'The CodeNarc Semantic Analysis target.'

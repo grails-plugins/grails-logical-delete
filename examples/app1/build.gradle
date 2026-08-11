@@ -1,9 +1,11 @@
+plugins {
+    id('org.apache.grails.gradle.grails-web')
+    id('org.apache.grails.gradle.grails-gsp')
+    id('cloud.wondrify.asset-pipeline')
+}
+
 version = projectVersion
 group = 'test'
-
-apply plugin: 'org.apache.grails.gradle.grails-web'
-apply plugin: 'org.apache.grails.gradle.grails-gsp'
-apply plugin: 'cloud.wondrify.asset-pipeline'
 
 dependencies {
 
@@ -39,7 +41,6 @@ dependencies {
         runtimeOnly 'cloud.wondrify:asset-pipeline-grails'
         runtimeOnly 'com.h2database:h2'
         runtimeOnly 'org.apache.tomcat:tomcat-jdbc'
-        runtimeOnly 'org.fusesource.jansi:jansi'
 
         testImplementation 'org.apache.grails:grails-testing-support-datamapping'
         testImplementation 'org.apache.grails:grails-testing-support-web'
@@ -54,7 +55,7 @@ compileJava.options.release = javaVersion.toInteger()
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
     testLogging {
-        showStandardStreams = true
+        showStandardStreams = false
         events('passed', 'skipped', 'failed', 'standardOut', 'standardError')
     }
     // For debugging

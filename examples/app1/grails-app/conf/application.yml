@@ -3,6 +3,10 @@ info:
     name: '@info.app.name@'
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
+logging:
+  level:
+    root: warn
+    org.hibernate.orm.deprecation: off
 dataSource:
   driverClassName: org.h2.Driver
   username: sa

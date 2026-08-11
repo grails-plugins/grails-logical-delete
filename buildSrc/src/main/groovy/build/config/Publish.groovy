@@ -20,9 +20,6 @@ class Publish implements Plugin<Project> {
             it.title.set('Grails Logical Delete')
             it.desc.set('Adds soft-delete capabilities to Grails domain classes.')
             it.githubSlug.set('grails-plugins/grails-logical-delete')
-            it.developers.set(project.provider {
-                project.findProperty('pomDevelopers') as Map ?: [:]
-            } as Provider<? extends Map<? extends String, ? extends String>>)
         }
     }
 }

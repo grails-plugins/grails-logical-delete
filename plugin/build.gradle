@@ -10,12 +10,14 @@ plugins {
 version = projectVersion
 group = 'org.grails.plugins'
 
-ext.set('pomDevelopers', [
-    jeffscottbrown: 'Jeff Scott Brown',
-    niravassar: 'Nirav Assar',
-    benrhine: 'Ben Rhine',
-    matrei: 'Mattias Reichel',
-])
+grailsPublish {
+    developers = [
+        jeffscottbrown: 'Jeff Scott Brown',
+        niravassar: 'Nirav Assar',
+        benrhine: 'Ben Rhine',
+        matrei: 'Mattias Reichel',
+    ]
+}
 
 dependencies {
 
@@ -39,6 +41,7 @@ dependencies {
     compileOnly 'org.springframework:spring-context', { // Provided
         // impl: ApplicationListener
     }
+    compileOnly 'org.slf4j:slf4j-nop' // Prevent warning about missing slf4j implementation during compile task
     compileOnly 'org.springframework.boot:spring-boot-autoconfigure', { // Provided
         // runtime: @AutoConfiguration(runtime), @Bean(runtime)
     }

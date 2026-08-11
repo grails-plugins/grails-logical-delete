@@ -19,7 +19,7 @@ import grails.plugins.Plugin
 
 class LogicalDeleteGrailsPlugin extends Plugin {
 
-    def grailsVersion = '7.0.0 > *'
+    def grailsVersion = '8.0.0 > *'
     def title = 'Grails Logical Delete'
     def author = 'Jeff Scott Brown'
     def authorEmail = 'brownj@objectcomputing.com'

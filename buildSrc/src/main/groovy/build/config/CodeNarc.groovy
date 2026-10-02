@@ -28,11 +28,10 @@ class CodeNarc implements Plugin<Project>  {
                 description = 'The CodeNarc Semantic Analysis target.'
                 canBeConsumed = false
                 canBeResolved = true
-                visible = false
             }
             project.dependencies.add(
-                    'codenarcAnalysisTarget', project
-                    //project.dependencies.project(path: ':grails-logical-delete')
+                    'codenarcAnalysisTarget',
+                    project.dependencies.project(path: project.path)
             )
 
             def sourceSets = project.extensions.findByType(SourceSetContainer)

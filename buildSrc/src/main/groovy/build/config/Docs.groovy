@@ -26,8 +26,10 @@ class Docs implements Plugin<Project> {
         }
 
         project.tasks.withType(AsciidoctorTask).configureEach {
-            it.sourceDir = project.layout.projectDirectory.dir('src').asFile
-            it.outputDir = project.layout.buildDirectory.dir('docs').get().asFile.absolutePath
+            it.sourceDir = project.layout.projectDirectory.dir('src/docs').asFile
+            // Keep separate from the groovydoc/javadoc output dirs (build/docs/api, build/docs/javadoc)
+            // to avoid overlapping task outputs
+            it.outputDir = project.layout.buildDirectory.dir('docs/docs').get().asFile.absolutePath
             it.baseDirFollowsSourceDir()
             it.options = [
                     doctype: 'book',

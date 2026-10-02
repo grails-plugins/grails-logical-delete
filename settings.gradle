@@ -5,3 +5,6 @@ findProject(':plugin').name = 'grails-logical-delete'
 
 include('app1')
 project(':app1').projectDir = new File(settingsDir, 'examples/app1')
+
+include('app1-hibernate7')
+project(':app1-hibernate7').projectDir = new File(settingsDir, 'examples/app1-hibernate7')

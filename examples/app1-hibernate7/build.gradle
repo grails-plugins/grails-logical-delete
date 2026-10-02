@@ -1,0 +1,67 @@
+plugins {
+    id('org.apache.grails.gradle.grails-web')
+}
+
+version = projectVersion
+group = 'test'
+
+// Runs the application and integration tests of app1 against GORM for Hibernate 7.
+// The sources are shared with app1 so the two apps verify exactly the same behavior.
+def app1Dir = rootProject.layout.projectDirectory.dir('examples/app1')
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['controllers', 'domain', 'init', 'services'].collect { app1Dir.dir("grails-app/$it") }
+        }
+        resources {
+            srcDirs = [app1Dir.dir('grails-app/conf')]
+        }
+    }
+    integrationTest {
+        groovy {
+            srcDirs = [app1Dir.dir('src/integration-test/groovy')]
+        }
+    }
+}
+
+dependencies {
+
+    implementation platform("org.apache.grails:grails-hibernate7-bom:$grailsVersion")
+
+    implementation project(':grails-logical-delete')
+
+    implementation 'org.apache.grails:grails-core'
+    implementation 'org.apache.grails:grails-logging'
+    implementation 'org.apache.grails:grails-databinding'
+    implementation 'org.apache.grails:grails-interceptors'
+    implementation 'org.apache.grails:grails-rest-transforms'
+    implementation 'org.apache.grails:grails-services'
+    implementation 'org.apache.grails:grails-url-mappings'
+    implementation 'org.apache.grails:grails-web-boot'
+    implementation 'org.apache.grails:grails-data-hibernate7'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.apache.tomcat:tomcat-jdbc'
+
+    testImplementation 'org.apache.grails:grails-testing-support-datamapping'
+    testImplementation 'org.apache.grails:grails-testing-support-web'
+    testImplementation 'org.spockframework:spock-core'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+compileJava.options.release = javaVersion.toInteger()
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = false
+        events('passed', 'skipped', 'failed', 'standardOut', 'standardError')
+    }
+}

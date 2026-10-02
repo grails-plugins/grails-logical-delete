@@ -1,7 +1,9 @@
 package grails.logical.delete
 
 import app.Person
+import org.hibernate.Version
 import spock.lang.Narrative
+import spock.lang.PendingFeatureIf
 import spock.lang.Specification
 import spock.lang.Title
 
@@ -89,6 +91,10 @@ class LogicalDeleteSpec extends Specification implements PersonTestData {
     }
 
     @Rollback
+    @PendingFeatureIf(
+            value = { Version.versionString.startsWith('7.') },
+            reason = 'GORM for Hibernate 7 returns a detached proxy from proxy(id) that cannot be initialized'
+    )
     void 'proxy(id) after logical delete works'() {
 
         when: 'getting a proxy for a non-deleted person'

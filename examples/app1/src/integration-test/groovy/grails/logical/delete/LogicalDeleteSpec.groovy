@@ -93,7 +93,7 @@ class LogicalDeleteSpec extends Specification implements PersonTestData {
     @Rollback
     @PendingFeatureIf(
             value = { Version.versionString.startsWith('7.') },
-            reason = 'GORM for Hibernate 7 returns a detached proxy from proxy(id) that cannot be initialized'
+            reason = 'GORM for Hibernate 7 returns a detached proxy from proxy(id) that cannot be initialized: https://github.com/apache/grails-core/issues/16483'
     )
     void 'proxy(id) after logical delete works'() {
 

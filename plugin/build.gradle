@@ -29,6 +29,9 @@ dependencies {
     compileOnly 'org.apache.grails.common:grails-common', { // Provided
         // comp: GroovyTransformOrder
     }
+    compileOnly 'org.apache.grails.beandsl:grails-beans-dsl', { // Provided
+        // comp: beans DSL in LogicalDeleteGrailsPlugin
+    }
     compileOnly 'org.apache.grails.data:grails-datamapping-core', { // Provided
         // api: DetachedCriteria, GormEntity
         // impl: GormEnhancer, GormStaticApi

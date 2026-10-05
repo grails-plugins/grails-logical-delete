@@ -15,8 +15,14 @@
  */
 package grails.logical.delete
 
+import groovy.transform.CompileStatic
+
+import org.springframework.boot.autoconfigure.AutoConfiguration
+
 import grails.plugins.Plugin
 
+@CompileStatic
+@AutoConfiguration
 class LogicalDeleteGrailsPlugin extends Plugin {
 
     def grailsVersion = '8.0.0 > *'
@@ -39,4 +45,8 @@ class LogicalDeleteGrailsPlugin extends Plugin {
     def scm = [
             url: 'https://github.com/grails-plugins/grails-logical-delete'
     ]
+
+    def beans = {
+        bean('logicalDeletePreQueryListener', PreQueryListener).conditionalOnMissingBean()
+    }
 }

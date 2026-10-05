@@ -26,6 +26,7 @@ class Docs implements Plugin<Project> {
         }
 
         project.tasks.withType(AsciidoctorTask).configureEach {
+            it.notCompatibleWithConfigurationCache('The Asciidoctor Gradle plugin does not support the configuration cache')
             it.sourceDir = project.layout.projectDirectory.dir('src/docs').asFile
             // Keep separate from the groovydoc/javadoc output dirs (build/docs/api, build/docs/javadoc)
             // to avoid overlapping task outputs

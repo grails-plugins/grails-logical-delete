@@ -76,3 +76,7 @@ assets {
             'webjars/bootstrap-icons/*/font/fonts/*',
     ]
 }
+
+tasks.named('assetCompile') {
+    notCompatibleWithConfigurationCache('The Asset Pipeline Gradle plugin does not support the configuration cache')
+}

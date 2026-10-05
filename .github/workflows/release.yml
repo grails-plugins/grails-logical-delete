@@ -101,6 +101,7 @@ jobs:
           NEXUS_PUBLISH_DESCRIPTION: '${{ env.REPO_NAME }}:${{ env.VERSION }}'
         run: >
           ./gradlew
+          --no-configuration-cache
           findSonatypeStagingRepository
           releaseSonatypeStagingRepository
       - name: "📖 Generate Documentation"

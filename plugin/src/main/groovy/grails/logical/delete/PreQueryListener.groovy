@@ -32,24 +32,41 @@ class PreQueryListener implements ApplicationListener<PreQueryEvent> {
     private static final Query.Criterion NOT_DELETED =
             new Query.Equals('deleted', false)
 
+    private static final Query.Criterion NOT_DELETED_AT =
+            new Query.IsNull('deletedAt')
+
     @Override
     void onApplicationEvent(PreQueryEvent event) {
         try {
             def query = event.query
             def entity = query.entity
-            if (LogicalDelete.isAssignableFrom(entity.javaClass)) {
+            def notDeleted = notDeletedCriterion(entity.javaClass)
+            if (notDeleted) {
                 def shouldExcludeDeleted = EXCLUDE_SOFT_DELETED_FLAG.get()
                 log.debug(
-                        'Entity {} implements LogicalDelete, excluding soft deletes from query results: {}',
+                        'Entity {} supports logical delete, excluding soft deletes from query results: {}',
                         entity,
                         shouldExcludeDeleted
                 )
                 if (shouldExcludeDeleted) {
-                    query.add(NOT_DELETED)
+                    query.add(notDeleted)
                 }
             }
         } catch (Exception e) {
             log.error(e.message)
         }
+    }
+
+    /**
+     * Returns the criterion matching entities that are not logically deleted.
+     *
+     * @param entityClass The class of the queried entity
+     * @return The criterion, or {@code null} if the entity does not support logical delete
+     */
+    private static Query.Criterion notDeletedCriterion(Class<?> entityClass) {
+        if (LogicalDelete.isAssignableFrom(entityClass)) {
+            return NOT_DELETED
+        }
+        LogicalDeleteTimestamp.isAssignableFrom(entityClass) ? NOT_DELETED_AT : null
     }
 }

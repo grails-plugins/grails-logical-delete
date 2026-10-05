@@ -23,7 +23,7 @@ jobs:
           echo "Release version: ${TAG#v}"
           echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
       - name: "📥 Checkout the repository"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,12 +32,12 @@ jobs:
       - name: "📅 Ensure source files use common date"
         run: find . -depth \( -type f -o -type d \) -exec touch -d "@${SOURCE_DATE_EPOCH}" {} +
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
       - name: "⚙️ Run pre-release"
         uses: grails/github-actions/pre-release@asf
         env:
@@ -64,7 +64,7 @@ jobs:
       - name: "📅 Generate Build Date file"
         run: echo "$SOURCE_DATE_EPOCH" >> build/BUILD_DATE.txt
       - name: "📤 Upload Build Date file"
-        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           tag_name: ${{ env.TAG }}
           files: build/BUILD_DATE.txt
@@ -82,17 +82,17 @@ jobs:
           echo "Release version: ${TAG#v}"
           echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
       - name: "📥 Checkout repository"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
       - name: "📤 Release staging repository"
         env:
           NEXUS_PUBLISH_USERNAME: ${{ secrets.NEXUS_PUBLISH_USERNAME }}

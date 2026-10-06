@@ -144,12 +144,49 @@ This is particularly useful when working with GORM Data Services or other classe
 include::{examples}/app1/grails-app/services/app/PeopleDataService.groovy[tags=peopleDataService,indent=0]
 ----
 
+=== Recording When an Entity Was Deleted
+
+To record **when** an entity was logically deleted instead of only **whether** it was, implement the
+link:../api/grails/logical/delete/LogicalDeleteTimestamp.html[LogicalDeleteTimestamp] trait instead of `LogicalDelete`.
+
+The trait adds a persistent, nullable `java.time.Instant` property named `deletedAt`.
+An entity is considered __logically deleted__ when `deletedAt` is set, and not deleted when it is `null`.
+
+[source,groovy]
+----
+include::{examples}/app1/grails-app/domain/app/Customer.groovy[tags=customer_class,indent=0]
+----
+
+Calling `delete()` sets `deletedAt` to the current time, and `undelete()` sets it back to `null`.
+Deleting an entity that is already logically deleted keeps its original deletion time.
+As with `LogicalDelete`, `delete(hard: true)` physically deletes the record.
+
+[source,groovy]
+----
+include::{examples}/app1/src/integration-test/groovy/grails/logical/delete/LogicalDeleteTimestampSpec.groovy[tags=delete_timestamp,indent=0]
+----
+
+Everything else works the same way as for `LogicalDelete`: queries exclude logically deleted records by default,
+and `withDeleted` and the `@WithDeleted` annotation include them. For example, this query only returns
+`Initech` if `Acme` has been logically deleted:
+
+[source,groovy]
+----
+include::{examples}/app1/src/integration-test/groovy/grails/logical/delete/LogicalDeleteTimestampSpec.groovy[tags=where_timestamp,indent=0]
+----
+
+NOTE: Persistent properties are nullable by default in Grails 8. If your application makes them non-nullable by default,
+with `grails.gorm.default.nullable = false` or a `'*'(nullable: false)` default constraint,
+add `deletedAt(nullable: true)` to the `constraints` of the domain class.
+
 == Implementation Details
 
 This section provides a brief overview of the internal implementation of the **Grails Logical Delete** plugin.
 
 The link:../api/grails/logical/delete/LogicalDelete.html[LogicalDelete] trait defines the `deleted` property
 and overrides core persistence methods to implement **soft deletion** and **query filtering** behavior.
+The link:../api/grails/logical/delete/LogicalDeleteTimestamp.html[LogicalDeleteTimestamp] trait does the same
+with the `deletedAt` property.
 
 The link:../api/grails/logical/delete/PreQueryListener.html[PreQueryListener] listens for query events and
 modifies the query to automatically **exclude logically deleted records**.

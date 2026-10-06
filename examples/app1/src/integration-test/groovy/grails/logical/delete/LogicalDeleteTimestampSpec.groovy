@@ -55,6 +55,24 @@ class LogicalDeleteTimestampSpec extends Specification {
     }
 
     @Rollback
+    void 'deleting an entity again keeps the original deletion time'() {
+        given: 'a customer that was deleted in the past'
+            createCustomers()
+            def deletedAt = Instant.parse('2020-01-01T00:00:00Z')
+            acme.deletedAt = deletedAt
+            acme.save(flush: true)
+
+        when: 'deleting the customer again'
+            acme.delete()
+            acme.delete(flush: true)
+            Customer.withSession { it.clear() }
+            def customer = Customer.withDeleted { Customer.get(acme.id) } as Customer
+
+        then: 'the original deletion time is kept'
+            customer.deletedAt == deletedAt
+    }
+
+    @Rollback
     void 'logically deleted entities are excluded when retrieved by id'() {
         given:
             createCustomers()

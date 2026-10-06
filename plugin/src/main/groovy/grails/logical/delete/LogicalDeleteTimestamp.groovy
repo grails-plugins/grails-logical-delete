@@ -144,15 +144,17 @@ trait LogicalDeleteTimestamp<D> extends GormEntity<D> {
 
     /**
      * Marks the entity as logically deleted, setting {@code deletedAt} to the current time.
+     * An entity that is already logically deleted keeps its original deletion time.
      */
     void delete() {
-        markDeleted(Instant.now())
+        markDeletedNow()
         save()
     }
 
     /**
      * Marks the entity as logically deleted or physically deletes it
-     * based on the parameters.
+     * based on the parameters. An entity that is already logically deleted
+     * keeps its original deletion time.
      *
      * @param params The parameters to control saving and deletion behavior.
      *               Use 'hard: true' to physically delete the entity.
@@ -161,7 +163,7 @@ trait LogicalDeleteTimestamp<D> extends GormEntity<D> {
         if (params?.hard) {
             super.delete(params)
         } else {
-            markDeleted(Instant.now())
+            markDeletedNow()
             save(params)
         }
     }
@@ -182,6 +184,16 @@ trait LogicalDeleteTimestamp<D> extends GormEntity<D> {
     void undelete(Map params) {
         markDeleted(null)
         save(params)
+    }
+
+    /**
+     * Sets the deletion timestamp of the entity to the current time,
+     * unless it is already logically deleted.
+     */
+    private void markDeletedNow() {
+        if (deletedAt == null) {
+            markDeleted(Instant.now())
+        }
     }
 
     /**

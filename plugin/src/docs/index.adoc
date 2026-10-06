@@ -158,6 +158,7 @@ include::{examples}/app1/grails-app/domain/app/Customer.groovy[tags=customer_cla
 ----
 
 Calling `delete()` sets `deletedAt` to the current time, and `undelete()` sets it back to `null`.
+Deleting an entity that is already logically deleted keeps its original deletion time.
 As with `LogicalDelete`, `delete(hard: true)` physically deletes the record.
 
 [source,groovy]

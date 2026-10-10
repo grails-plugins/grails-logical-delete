@@ -1,0 +1,3 @@
+grails.logical.delete
+grails.logical.delete.annotations
+grails.logical.delete.ast
